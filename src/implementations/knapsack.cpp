@@ -1,10 +1,10 @@
 #include "knapsack.hpp"
 #include <iostream>
 #include <fstream>
-#include <string>
 
 Knapsack::Knapsack(const string instance)
 {
+    cout << "New instance of Knapsack" << endl;
     // Read Instance
 
     ifstream file(instance);
@@ -24,7 +24,7 @@ Knapsack::Knapsack(const string instance)
 
 }
 
-Knapsack::~Knapsack()
+/* Knapsack::~Knapsack()
 {
-    delete(this->conflits);
-}
+    delete[] this->conflits;
+} */

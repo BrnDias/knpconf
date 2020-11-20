@@ -1,6 +1,5 @@
 #include <iostream>
-
-using namespace std;
+#include "knapsack.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -11,7 +10,7 @@ int main(int argc, char const *argv[])
 
     const string input = argv[1], output = argv[2]; 
 
-    
+    Knapsack* knp = new Knapsack(input);
 
     return 0;
 }
