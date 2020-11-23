@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <fstream>
 
 BranchAndBound::BranchAndBound()
 {
@@ -44,18 +45,6 @@ double BranchAndBound::knpFrac(Knapsack *knapsack, vector<Item>::iterator begin)
     set_difference(itemsCopy.begin(), itemsCopy.end(),
                    knapsackCopy.begin(), knapsackCopy.end(),
                    back_inserter(remaining), cmpIndex);
-
-    /* for (auto &&i : itemsCopy)
-    {
-        cout << i.first << " " << i.second.first << " " << i.second.second << " " << (double)i.second.first / i.second.second << endl;
-    }
-    cout << endl; */
-
-    /* for (auto &&i : remaining)
-    {
-        cout << i.first << " " << i.second.first << " " << i.second.second << " " << (double)i.second.first / i.second.second << endl;
-    }
-    cout << endl; */
 
     sort(remaining.begin(), remaining.end(), cmpDensity);
 
@@ -102,14 +91,20 @@ double BranchAndBound::knpFrac(Knapsack *knapsack, vector<Item>::iterator begin)
 
 void BranchAndBound::run()
 {
+    // Start time counter
+    this->startTime = chrono::high_resolution_clock::now();
+
     // Root node
-    Node *root = new Node(), *newNode = nullptr;
+    Node *root = new Node(),
+         *newNode = nullptr;
 
     root->setUpperBound(1.0);
 
     tree.push(root);
 
-    while (!tree.empty())
+    bool timeEnded = false;
+
+    while (!tree.empty() && !timeEnded)
     {
         root = tree.top();
         tree.pop();
@@ -118,8 +113,16 @@ void BranchAndBound::run()
         if (root->getUpperBound() > this->incumbentSolution.getTotalValue())
         {
 
+            // Root node expansion
             for (auto i = *root->getRemaining(); i != Instance::getInstance()->getItems()->end(); ++i)
             {
+                // TIME LIMIT
+                timeEnded = this->timeLimitReached();
+                if (timeEnded)
+                {
+                    break;
+                }
+
                 newNode = new Node(*root);
 
                 // BOUND (invalid): if there's a conflict OR
@@ -169,15 +172,72 @@ void BranchAndBound::run()
 
         delete root;
     }
+
+    while (!tree.empty())
+    {
+        root = tree.top();
+        tree.pop();
+        delete root;
+    }
 }
 
-void BranchAndBound::print()
+void BranchAndBound::save(const string output)
 {
-    cout << "=======================================" << endl;
-    cout << "Value: " << this->incumbentSolution.getTotalValue() << endl;
-    cout << "Weight: " << this->incumbentSolution.getTotalWeight() << endl;
-    for (auto &&i : *this->incumbentSolution.getItems())
+    // Read Instance
+    ofstream file("./outputs/" + output);
+
+    if (file.is_open())
     {
-        cout << i->first << " " << i->second.first << " " << i->second.second << " " << (double)i->second.first / i->second.second << endl;
+        // Write profit
+        file << this->incumbentSolution.getTotalValue() << " ";
+
+        // Write totoal items
+        file << this->incumbentSolution.getItems()->size();
+
+        // Write items
+        for (auto &&i : *this->incumbentSolution.getItems())
+        {
+            file << " " << i->first + 1;
+        }
+
+        file.close();
     }
+    else
+    {
+        cerr << "Unable to create file!" << endl;
+        exit(1);
+    }
+}
+
+void BranchAndBound::verify(const string input)
+{
+    cout << "=================================================================" << endl;
+    cout << "INSTANCE: " << input << endl
+         << endl;
+
+    bool hasConflict = false;
+
+    cout << "Profit:          " << this->incumbentSolution.getTotalValue() << endl;
+    cout << "Max capacity:    " << Instance::getInstance()->getCapacity() << endl;
+    cout << "Solution weight: " << this->incumbentSolution.getTotalWeight() << endl
+         << endl;
+
+    cout << "Conflicts: " << endl;
+
+    for (auto i = this->incumbentSolution.getItems()->begin(); i != this->incumbentSolution.getItems()->end(); ++i)
+    {
+        for (auto j = next(i); j != this->incumbentSolution.getItems()->end(); ++j)
+        {
+            if (Instance::getInstance()->hasConflict((*i)->first, (*j)->first))
+            {
+                cout << "(" << (*i)->first + 1 << ", " << (*j)->first << ")" << endl;
+                hasConflict = true;
+            }
+        }
+    }
+    if (!hasConflict)
+    {
+        cout << "Conflicts not found!" << endl;
+    }
+    cout << endl;
 }

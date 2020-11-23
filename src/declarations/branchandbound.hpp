@@ -5,6 +5,7 @@
 #include <chrono>
 #include <queue>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ class BranchAndBound
 {
 private:
     // Time
-    const double timeLimit = 60.0;
+    const double timeLimit = 704.0;
     chrono::time_point<std::chrono::high_resolution_clock> startTime;
     bool timeLimitReached();
 
@@ -30,7 +31,8 @@ public:
     ~BranchAndBound();
 
     void run();
-    void print();
+    void save(const string);
+    void verify(const string);
 };
 
 #endif

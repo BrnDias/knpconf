@@ -10,10 +10,10 @@ bool cmpDensity(Item a, Item b)
 
 Instance *Instance::instance = nullptr;
 
-Instance::Instance(const string instance)
+Instance::Instance(const string input)
 {
     // Read Instance
-    ifstream file("./instances/" + instance);
+    ifstream file("./instances/" + input);
 
     if (file.is_open())
     {
@@ -107,12 +107,6 @@ Item *Instance::getItem(uint_fast16_t index)
 {
     return &this->items[index];
 }
-
-/* vector<Item>::iterator Instance::getItemIterator(uint_fast16_t index)
-{
-    return this->items.begin() + index;
-}
- */
 
 const bool Instance::hasConflict(uint_fast16_t itemA, uint_fast16_t itemB)
 {

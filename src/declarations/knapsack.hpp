@@ -27,7 +27,6 @@ public:
     vector<Item *> *getItems();
 
     bool addItem(Item *);
-    double fractionalKnapsack(vector<Item>::iterator) const;
 };
 
 #endif
