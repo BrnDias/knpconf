@@ -117,11 +117,11 @@ void BranchAndBound::run()
             for (auto i = *root->getRemaining(); i != Instance::getInstance()->getItems()->end(); ++i)
             {
                 // TIME LIMIT
-                /* timeEnded = this->timeLimitReached();
+                timeEnded = this->timeLimitReached();
                 if (timeEnded)
                 {
                     break;
-                } */
+                }
 
                 newNode = new Node(*root);
 
