@@ -29,7 +29,6 @@ public:
     uint_fast16_t getLowerBound() const;
 
     vector<Item>::iterator *getRemaining();
-    void setRemaining(const vector<Item>::iterator);
 
     friend bool operator<(const Node &a, const Node &b);
     friend bool operator>(const Node &a, const Node &b);

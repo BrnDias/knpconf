@@ -68,6 +68,7 @@ Instance::Instance(const string input)
 
 Instance::~Instance()
 {
+    delete this->instance;
 }
 
 void Instance::init(const string instance)
@@ -101,11 +102,6 @@ map<uint_fast16_t, set<uint_fast16_t>> *Instance::getConflits()
 vector<Item> *Instance::getItems()
 {
     return &this->items;
-}
-
-Item *Instance::getItem(uint_fast16_t index)
-{
-    return &this->items[index];
 }
 
 const bool Instance::hasConflict(uint_fast16_t itemA, uint_fast16_t itemB)

@@ -13,7 +13,7 @@ class BranchAndBound
 {
 private:
     // Time
-    const double timeLimit = 704.0;
+    const double timeLimit = 771.0;
     chrono::time_point<std::chrono::high_resolution_clock> startTime;
     bool timeLimitReached();
 

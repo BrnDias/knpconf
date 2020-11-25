@@ -49,11 +49,6 @@ vector<Item>::iterator *Node::getRemaining()
     return &this->remaining;
 }
 
-void Node::setRemaining(const vector<Item>::iterator remaining)
-{
-    this->remaining = remaining;
-}
-
 bool operator<(const Node &a, const Node &b)
 {
     return a.getUpperBound() < b.getUpperBound();
